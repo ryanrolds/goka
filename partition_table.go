@@ -535,6 +535,7 @@ func (p *PartitionTable) TrackMessageWrite(ctx context.Context, length int) {
 }
 
 func (p *PartitionTable) storeEvent(key string, value []byte, offset int64, headers []*sarama.RecordHeader, timestamp time.Time) error {
+	fmt.Printf("storeEvent: key=%s, value=%s, topic=%s, partition=%d\n", key, value, p.st.topic, p.st.partition)
 	err := p.st.Update(&DefaultUpdateContext{
 		topic:     p.st.topic,
 		partition: p.st.partition,
