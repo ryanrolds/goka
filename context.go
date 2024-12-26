@@ -306,10 +306,16 @@ func (ctx *cbContext) Join(topic Table) interface{} {
 	if ctx.pviews == nil {
 		ctx.Fail(fmt.Errorf("table %s not subscribed", topic))
 	}
+
 	v, ok := ctx.pviews[string(topic)]
 	if !ok {
 		ctx.Fail(fmt.Errorf("table %s not subscribed", topic))
 	}
+
+	fmt.Printf("key %s\n", ctx.Key())
+	fmt.Printf("topic %s\n", topic)
+	fmt.Printf("%v\n", v.st)
+
 	data, err := v.st.Get(ctx.Key())
 	if err != nil {
 		ctx.Fail(fmt.Errorf("error getting key %s of table %s: %v", ctx.Key(), topic, err))
