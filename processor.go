@@ -559,6 +559,8 @@ func (g *Processor) findStatefulPartitions() ([]int32, error) {
 		allPartitions []int32
 	)
 	for _, edge := range chainEdges(g.graph.groupTable, g.graph.inputTables) {
+		g.log.Printf("Finding partitions with local state for %s", edge.Topic())
+
 		allPartitions, err = g.tmgr.Partitions(edge.Topic())
 		if err != nil && err != errTopicNotFound {
 			return nil, err
@@ -567,6 +569,8 @@ func (g *Processor) findStatefulPartitions() ([]int32, error) {
 			break
 		}
 	}
+
+	g.log.Printf("Found partitions with local state: %v", allPartitions)
 
 	return allPartitions, err
 }
