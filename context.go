@@ -320,6 +320,7 @@ func (ctx *cbContext) Join(topic Table) interface{} {
 	if err != nil {
 		ctx.Fail(fmt.Errorf("error getting key %s of table %s: %v", ctx.Key(), topic, err))
 	} else if data == nil {
+		fmt.Printf("data is nil\n")
 		return nil
 	}
 
@@ -327,6 +328,8 @@ func (ctx *cbContext) Join(topic Table) interface{} {
 	if err != nil {
 		ctx.Fail(fmt.Errorf("error decoding value key %s of table %s: %v", ctx.Key(), topic, err))
 	}
+
+	fmt.Printf("value %v\n", value)
 	return value
 }
 
