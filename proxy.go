@@ -32,7 +32,7 @@ func (s *storageProxy) Close() error {
 }
 
 func (s *storageProxy) Update(ctx UpdateContext, k string, v []byte) error {
-	fmt.Printf("storageProxy.Update: k=%s, v=%s\n", k, v)
+	fmt.Printf("storageProxy.Update: topic=%s, partition=%d, k=%s, v=%s\n", ctx.Topic(), ctx.Partition(), k, v)
 	return s.update(ctx, s, k, v)
 }
 

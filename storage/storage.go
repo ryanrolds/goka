@@ -129,7 +129,9 @@ func (s *storage) Has(key string) (bool, error) {
 }
 
 func (s *storage) Get(key string) ([]byte, error) {
+	fmt.Printf("%v\n", s.db)
 	value, err := s.db.Get([]byte(key), nil)
+	fmt.Printf("storage.Get: key=%s, value=%s, err=%s\n", key, value, err)
 	if err == leveldb.ErrNotFound {
 		return nil, nil
 	} else if err != nil {
@@ -171,6 +173,7 @@ func (s *storage) GetOffset(defValue int64) (int64, error) {
 }
 
 func (s *storage) Set(key string, value []byte) error {
+	fmt.Printf("%v\n", s.db)
 	fmt.Printf("storage.Set: key=%s, value=%s\n", key, value)
 	if err := s.db.Put([]byte(key), value, nil); err != nil {
 		return fmt.Errorf("error setting to leveldb (key %s): %v", key, err)
