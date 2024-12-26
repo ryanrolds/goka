@@ -1,6 +1,8 @@
 package goka
 
 import (
+	"fmt"
+
 	"github.com/lovoo/goka/storage"
 )
 
@@ -30,6 +32,7 @@ func (s *storageProxy) Close() error {
 }
 
 func (s *storageProxy) Update(ctx UpdateContext, k string, v []byte) error {
+	fmt.Printf("storageProxy.Update: k=%s, v=%s\n", k, v)
 	return s.update(ctx, s, k, v)
 }
 
