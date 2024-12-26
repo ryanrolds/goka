@@ -314,6 +314,8 @@ func (ctx *cbContext) Join(topic Table) interface{} {
 
 	fmt.Printf("key %s\n", ctx.Key())
 	fmt.Printf("topic %s\n", topic)
+	fmt.Printf("parition table %v\n", ctx.pviews)
+	fmt.Printf("ctx partition %v\n", ctx.Partition())
 	fmt.Printf("%v\n", v.st)
 
 	data, err := v.st.Get(ctx.Key())
