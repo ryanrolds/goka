@@ -216,7 +216,7 @@ func (pp *PartitionProcessor) Start(setupCtx, ctx context.Context) error {
 	}
 
 	for _, join := range pp.graph.JointTables() {
-		fmt.Printf("Join %s\n", join.Topic())
+		fmt.Printf("Join %s %d\n", join.Topic(), pp.partition)
 		table := newPartitionTable(join.Topic(),
 			pp.partition,
 			pp.consumer,
@@ -240,6 +240,8 @@ func (pp *PartitionProcessor) Start(setupCtx, ctx context.Context) error {
 		return fmt.Errorf("Setup failed. Cannot start processor for partition %d: %v", pp.partition, err)
 	}
 
+	fmt.Printf("Starting processor for partition %d\n", pp.partition)
+
 	// check if one of the contexts might have been closed in the meantime
 	select {
 	case <-ctx.Done():
@@ -251,12 +253,14 @@ func (pp *PartitionProcessor) Start(setupCtx, ctx context.Context) error {
 	// If the partition-processor was started to do only that (e.g. for group-recover-ahead), we
 	// will return here
 	if pp.runMode == runModeRecoverOnly {
+		fmt.Print("Recover only\n")
 		return nil
 	}
 
 	for _, join := range pp.joins {
 		join := join
 		pp.runnerGroup.Go(func() error {
+			fmt.Printf("Running join %s\n", join.topic)
 			defer pp.state.SetState(PPStateStopping)
 			return join.CatchupForever(runnerCtx, false)
 		})
@@ -271,10 +275,12 @@ func (pp *PartitionProcessor) Start(setupCtx, ctx context.Context) error {
 		switch pp.runMode {
 		// (a) start the processor's message run loop so it is ready to receive and process messages
 		case runModeActive:
+			fmt.Printf("Running processor\n")
 			err = pp.run(runnerCtx)
 			// (b) run the processor table in catchup mode so it keeps updating it's state.
 		case runModePassive:
 			if pp.table != nil {
+				fmt.Printf("Running table\n")
 				err = pp.table.CatchupForever(runnerCtx, false)
 			}
 		default:
