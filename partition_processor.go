@@ -216,6 +216,7 @@ func (pp *PartitionProcessor) Start(setupCtx, ctx context.Context) error {
 	}
 
 	for _, join := range pp.graph.JointTables() {
+		fmt.Printf("Join %s\n", join.Topic())
 		table := newPartitionTable(join.Topic(),
 			pp.partition,
 			pp.consumer,
